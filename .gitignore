@@ -1,0 +1,8 @@
+backend/.env
+__pycache__
+storage/*
+*.jpeg
+*.jpg 
+*.png
+sql_app.db
+.vscode/*

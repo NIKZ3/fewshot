@@ -59,7 +59,13 @@ function TabOneNavigator() {
         component={TabOneScreen}
         options={{
           headerTitle: "Few Shot",
-          // header: () => null,
+        }}
+      />
+      <TabOneStack.Screen
+        name="TabOneScreen"
+        component={TabOneScreen}
+        options={{
+          headerTitle: "Few Shot",
         }}
       />
     </TabOneStack.Navigator>

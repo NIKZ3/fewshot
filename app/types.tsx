@@ -1,6 +1,14 @@
 export type RootStackParamList = {
-  Root: undefined;
+  FewShot: undefined;
+  Camera: undefined;
   NotFound: undefined;
+  Init: undefined;
+};
+
+export type UnAuthParamList = {
+  Login: undefined;
+  Register: undefined;
+  Root: undefined;
 };
 
 export type BottomTabParamList = {
@@ -15,3 +23,11 @@ export type TabOneParamList = {
 export type TabTwoParamList = {
   TabTwoScreen: undefined;
 };
+
+export interface GlobalData {
+  token: string;
+}
+export interface ContextData {
+  data: GlobalData;
+  setData: (data: GlobalData) => void;
+}

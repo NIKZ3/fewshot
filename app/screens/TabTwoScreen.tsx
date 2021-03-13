@@ -1,4 +1,3 @@
-import { Ionicons } from "@expo/vector-icons";
 import { Camera } from "expo-camera";
 import * as React from "react";
 import { Dimensions, Image, StyleSheet, TouchableOpacity } from "react-native";
@@ -81,7 +80,7 @@ export default function TabTwoScreen() {
                   style={styles.button}
                   onPress={() => setboxMode(true)}
                 >
-                  <Text style={{ color: "#416ce1" }}>Draw Box</Text>
+                  <Text style={{ color: "#416ce1" }}>Annotate Object</Text>
                 </TouchableOpacity>
               </>
             ) : (

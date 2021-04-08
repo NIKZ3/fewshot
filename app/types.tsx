@@ -26,8 +26,19 @@ export type TabTwoParamList = {
 
 export interface GlobalData {
   token: string;
+  network: {
+    config_url: string;
+    id: number;
+    known_classes: string;
+    owner_id: any;
+    public_access: boolean;
+    task: "segmentation" | "detection";
+    title: string;
+    url: string;
+  };
+  type: number;
 }
 export interface ContextData {
   data: GlobalData;
-  setData: (data: GlobalData) => void;
+  setData: (data: Partial<GlobalData>) => void;
 }

@@ -3,6 +3,8 @@ import * as React from "react";
 import { Dimensions, Image, StyleSheet, TouchableOpacity } from "react-native";
 import Svg, { Rect } from "react-native-svg";
 import { Text, View } from "../components/Themed";
+import GlobalContext from "../Context";
+import { Api } from "../services/api";
 import LabelModal from "./LabelModal";
 import useBoundingBox from "./useBoundingBox";
 
@@ -17,6 +19,7 @@ export default function TabTwoScreen() {
   const [boxMode, setboxMode] = React.useState(false);
   const [labelModal, setlabelModal] = React.useState(false);
   const { x0, y0, width, height, panResponder } = useBoundingBox();
+  const { data } = React.useContext(GlobalContext);
 
   React.useEffect(() => {
     (async () => {
@@ -78,9 +81,25 @@ export default function TabTwoScreen() {
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={styles.button}
-                  onPress={() => setboxMode(true)}
+                  onPress={async () => {
+                    if (data.type === 2) {
+                      await Api.post(`v1/inference/${data.network.task}`, {
+                        id: data.network.id,
+                        file: {
+                          //@ts-ignore
+                          uri: currentImage,
+                          type: "image/jpeg",
+                          name: "image.jpg",
+                        },
+                      });
+                    } else {
+                      setboxMode(true);
+                    }
+                  }}
                 >
-                  <Text style={{ color: "#416ce1" }}>Annotate Object</Text>
+                  <Text style={{ color: "#416ce1" }}>
+                    {data.type === 2 ? "Send" : "Annotate Object"}
+                  </Text>
                 </TouchableOpacity>
               </>
             ) : (
@@ -135,6 +154,7 @@ export default function TabTwoScreen() {
       <LabelModal
         coordinates={{ x0, y0, width, height }}
         visible={labelModal}
+        currentImage={currentImage}
         onClose={() => setlabelModal(false)}
       />
     </View>
@@ -154,5 +174,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#416ce1",
     paddingHorizontal: 12,
+    width: 150,
+    alignItems: "center",
   },
 });

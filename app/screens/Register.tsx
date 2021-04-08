@@ -1,17 +1,13 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { StackNavigationProp } from "@react-navigation/stack";
-import axios from "axios";
 import React from "react";
-import { View, Text, StyleSheet, Button, Alert } from "react-native";
+import { Alert, Button, StyleSheet, Text, View } from "react-native";
 import { TextInput } from "react-native-gesture-handler";
 import { tintColorLight } from "../constants/Colors";
 import GlobalContext from "../Context";
-import { RootStackParamList } from "../types";
+import { Api } from "../services/api";
 
-const Register = ({
-  navigation,
-}: {
-  navigation: StackNavigationProp<RootStackParamList>;
-}) => {
+const Register = ({ navigation }: { navigation: StackNavigationProp<any> }) => {
   const [{ username, password, confPassword }, setState] = React.useState({
     username: "",
     password: "",
@@ -34,13 +30,15 @@ const Register = ({
       } else if (password !== confPassword) {
         Alert.alert("Invalid Data", "Passwords should match");
       } else {
-        const result = await axios.post("");
+        const result = await Api.post("users/signup", { username, password });
         if (result.status === 200) {
           Alert.alert("Success", "Registered Successfully", [
             {
               onPress: async () => {
-                // await AsyncStorage.setItem('@jwt_token', result.data.token)
-                // setData({ token: result.data.token });
+                const token = result.request.responseHeaders.authorization;
+                await AsyncStorage.setItem("@jwt_token", token);
+                Api.defaults.headers.common.Authorization = token;
+                setData({ token });
               },
             },
           ]);

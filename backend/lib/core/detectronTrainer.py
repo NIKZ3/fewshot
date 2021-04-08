@@ -10,7 +10,7 @@ class DetectronTrainer:
         pass
 
     async def train(self, config_file: str, images: List[np.ndarray], label: str):
-        time.sleep(random.randint(30, 60))
+        time.sleep(random.randint(3, 6))
 
     def save(self):
         pass

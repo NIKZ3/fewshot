@@ -9,6 +9,7 @@ services:
             - ${SERVER_PORT}:${SERVER_PORT}
         volumes:
             - ${ROOT_DIR}:/server
+            - ${MODEL_DIR}:/.torch/iopath_cache/detectron2
         deploy:
             resources:
                 reservations:

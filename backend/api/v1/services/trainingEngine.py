@@ -9,7 +9,7 @@ from repository import networkRepository
 from lib.core.detectronTrainer import DetectronTrainer
 
 
-class FineTuner:
+class TrainingEngine:
     def __init__(self) -> None:
         self.trainer = DetectronTrainer()
 
@@ -19,7 +19,7 @@ class FineTuner:
             owner_id: int, db: Session
     ):
         await self.trainer.train(network.config_url, images=images, label=label)
-        await networkRepository.create_network(db, network.title+owner_id+label,
+        await networkRepository.create_network(db, network.title+str(owner_id)+label,
                                                known_classes=network.known_classes+","+label, public_access=False, config_url=network.config_url,
                                                task=network.task, owner_id=owner_id)
         db.commit()

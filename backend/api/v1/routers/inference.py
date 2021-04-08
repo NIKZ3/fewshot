@@ -9,7 +9,7 @@ from fastapi.exceptions import HTTPException
 from starlette.responses import StreamingResponse
 
 from api.auth import get_current_user
-from api.v1.services.inference import InferenceEngine
+from api.v1.services.inferenceEngine import InferenceEngine
 from database.connection import get_db
 from database.models import Network, User
 from repository import userRepository, networkRepository
@@ -43,7 +43,7 @@ async def run_inference(task: Task, background_tasks: BackgroundTasks, id: int =
         raise HTTPException(
             status_code=400, detail=f"You have requested for {task} to be run, but the selected model is for {network.task}!")
 
-    known_classes: List[str] = network.known_classes.split(",")
+    known_classes: List[str] = list(set(network.known_classes.split(",")))
     engine.set_classes(known_classes)
 
     image = await img_util.decode(file)

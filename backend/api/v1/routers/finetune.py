@@ -9,11 +9,11 @@ from database.connection import get_db
 from database.models import User, Network
 from repository import userRepository, networkRepository
 from lib.utils.imageOps import ImageOps
-from api.v1.services.finetune import FineTuner
+from api.v1.services.trainingEngine import TrainingEngine
 
 router = APIRouter(prefix="/api/v1/finetune", tags=["finetune"])
 img_util = ImageOps()
-tuner = FineTuner()
+tuner = TrainingEngine()
 
 
 @router.post("/{network_id}")
@@ -40,7 +40,7 @@ async def finetune(
     images = []
     for file in files:
         img_util.store_file_and_metadata(file, user.id)
-        images.append(img_util.decode(file))
+        images.append(await img_util.decode(file))
 
     background_tasks.add_task(tuner.tune, images, label, network, user.id, db)
     return {"message": "New model will be available soon"}

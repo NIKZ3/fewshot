@@ -28,16 +28,16 @@ class InferenceEngine:
             visualizer = ImageVisualizer(
                 config_file="COCO-InstanceSegmentation/mask_rcnn_R_101_FPN_3x.yaml")
 
-        return image  # visualizer.generate_image(
-        # image, outputs, class_names, self.known_classes)
+        return visualizer.generate_image(
+            image, outputs, class_names, self.known_classes)
 
     def set_classes(self, new_classes: List[str]):
         self.known_classes = new_classes
 
     def load_model(self, config_file: str, task: str):
         if task == "detection":
-            self.detectionNet = None  # DetectronNetwork(
-            # config_file=config_file, threshold=0.8)
+            self.detectionNet = DetectronNetwork(
+                config_file=config_file, threshold=0.8)
         elif task == "segmentation":
-            self.segmentationNet = None  # DetectronNetwork(
-            # config_file="COCO-InstanceSegmentation/mask_rcnn_R_101_FPN_3x.yaml", threshold=0.8)
+            self.segmentationNet = DetectronNetwork(
+                config_file="COCO-InstanceSegmentation/mask_rcnn_R_101_FPN_3x.yaml", threshold=0.8)

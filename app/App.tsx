@@ -22,7 +22,7 @@ export default function App() {
         <GlobalContext.Provider
           value={{
             data,
-            setData: (newData: GlobalData) =>
+            setData: (newData: Partial<GlobalData>) =>
               setData((prevData) => ({ ...prevData, ...newData })),
           }}
         >
@@ -33,3 +33,11 @@ export default function App() {
     );
   }
 }
+
+//// >>>>>>>>>>>>>>>>
+
+/*
+  1. pick network from networks list
+  2. select type of training, finetune/inference
+  3. after selection capture image send to one of the selected api's along with network id's
+*/

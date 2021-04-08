@@ -7,6 +7,8 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import GlobalContext from "../Context";
+import { Api } from "../services/api";
 
 interface LabelProps {
   visible: boolean;
@@ -17,14 +19,17 @@ interface LabelProps {
     width: number;
     height: number;
   };
+  currentImage: any;
 }
 
 const LabelModal: React.FC<LabelProps> = ({
   onClose,
   visible,
   coordinates,
+  currentImage,
 }) => {
   const [value, setvalue] = React.useState("");
+  const { data } = React.useContext(GlobalContext);
 
   return (
     <Modal
@@ -74,7 +79,25 @@ const LabelModal: React.FC<LabelProps> = ({
             >
               <Text style={{ color: "#416ce1" }}>Cancel</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.button} onPress={onClose}>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={async () => {
+                try {
+                  await Api.post(`v1/finetune/${data.network.id}`, {
+                    files: {
+                      //@ts-ignore
+                      uri: currentImage,
+                      type: "image/jpeg",
+                      name: "image.jpg",
+                    },
+                    label: value,
+                  });
+                  onClose();
+                } catch (err) {
+                  console.log(err);
+                }
+              }}
+            >
               <Text style={{ color: "#416ce1" }}>Send</Text>
             </TouchableOpacity>
           </View>

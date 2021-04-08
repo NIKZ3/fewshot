@@ -5,7 +5,6 @@ import {
   NavigationContainer,
 } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import axios from "axios";
 import * as React from "react";
 import { ActivityIndicator, ColorSchemeName } from "react-native";
 import { View } from "../components/Themed";
@@ -16,10 +15,9 @@ import NotFoundScreen from "../screens/NotFoundScreen";
 import Register from "../screens/Register";
 import TabOneScreen from "../screens/TabOneScreen";
 import TabTwoScreen from "../screens/TabTwoScreen";
+import { Api } from "../services/api";
 import { RootStackParamList, UnAuthParamList } from "../types";
 import LinkingConfiguration from "./LinkingConfiguration";
-
-axios.defaults.baseURL = "";
 
 export default function Navigation({
   colorScheme,
@@ -30,12 +28,15 @@ export default function Navigation({
 
   React.useEffect(() => {
     (async () => {
-      if (!data.token) {
+      if (data.token === null) {
         const localToken = await AsyncStorage.getItem("@jwt_token");
         if (localToken) {
           setData({ token: localToken || "" });
-          axios.defaults.headers.common.Authorization = localToken;
+          Api.defaults.headers.common.Authorization = localToken;
         }
+      } else if (data.token === "") {
+        await AsyncStorage.removeItem("@jwt_token");
+        Api.defaults.headers.common.Authorization = "";
       }
     })();
   }, [data.token]);

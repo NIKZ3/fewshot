@@ -1,12 +1,12 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { StackNavigationProp } from "@react-navigation/stack";
-import axios from "axios";
 import React from "react";
-import { View, Text, StyleSheet, Button, Alert } from "react-native";
+import { Alert, Button, StyleSheet, Text, View } from "react-native";
 import { TextInput } from "react-native-gesture-handler";
 import { tintColorLight } from "../constants/Colors";
 import GlobalContext from "../Context";
-import { RootStackParamList, UnAuthParamList } from "../types";
+import { Api } from "../services/api";
+import { UnAuthParamList } from "../types";
 
 const Login = ({
   navigation,
@@ -26,20 +26,19 @@ const Login = ({
 
   const onSubmit = async () => {
     try {
-      const result = await axios.post("", { username, password });
+      const result = await Api.post("users/login", { username, password });
       if (result.status === 200) {
-        // await AsyncStorage.setItem('@jwt_token', result.data.token)
-        // setData({ token: result.data.token });
-      } else if (result.status === 401) {
+        const token = result.request.responseHeaders.authorization;
+        await AsyncStorage.setItem("@jwt_token", token);
+        Api.defaults.headers.common.Authorization = token;
+        setData({ token });
+      } else if (result.status === 403) {
         Alert.alert("Error", "Username or password incorrect");
       } else {
         Alert.alert("Error", "Oops, some issue occured while logging in");
       }
     } catch (err) {
-      //>>>>>>>>>>>>>
-      if (username === "test") {
-        setData({ token: "temp" });
-      }
+      console.log(err);
       Alert.alert("Error", "Oops, some issue occured while logging in");
     }
   };

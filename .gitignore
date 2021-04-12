@@ -6,3 +6,5 @@ storage/*
 *.png
 sql_app.db
 .vscode/*
+backend/.vscode/*
+backend/demo/*

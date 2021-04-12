@@ -26,8 +26,13 @@ class Task(str, Enum):
 
 
 @router.post("/{task}")
-async def run_inference(task: Task, background_tasks: BackgroundTasks, id: int = Form(...), file: UploadFile = File(...),
-                        user_data: dict = Depends(get_current_user), db: Session = Depends(get_db)):
+async def run_inference(
+    task: Task,
+    background_tasks: BackgroundTasks,
+    id: int = Form(...), file: UploadFile = File(...),
+    user_data: dict = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
 
     username = user_data['username']
     network: Network = await networkRepository.get_network_by_id(db, network_id=id)

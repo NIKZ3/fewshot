@@ -1,19 +1,22 @@
 from typing import List
 
 import numpy
+from fastapi import Depends
 
 from lib.core.detectronNetwork import DetectronNetwork
 from lib.utils.visualizer import ImageVisualizer
+from config import get_config, Config
 
 
 class InferenceEngine:
     def __init__(self) -> None:
         self.known_classes = ['person', 'bus', 'traffic light', 'book', 'cat']
+        self.config: Config = get_config()
         print("Loading Inference Engine...")
         self.detectionNet = DetectronNetwork(
-            config_file="COCO-Detection/faster_rcnn_R_101_FPN_3x.yaml", threshold=0.8)
+            config_file=self.config.detection_default_config, threshold=0.8)
         self.segmentationNet = DetectronNetwork(
-            config_file="COCO-InstanceSegmentation/mask_rcnn_R_101_FPN_3x.yaml", threshold=0.8)
+            config_file=self.config.segmentation_default_config, threshold=0.8)
         print("Inference Engine Ready!")
 
     def run(self, image: numpy.ndarray, task: str):
@@ -21,12 +24,12 @@ class InferenceEngine:
             outputs, class_names, _ = self.detectionNet.predict(
                 image=image)
             visualizer = ImageVisualizer(
-                config_file="COCO-Detection/faster_rcnn_R_101_FPN_3x.yaml")
+                config_file=self.config.detection_default_config)
         elif task == "segmentation":
             outputs, class_names, _ = self.segmentationNet.predict(
                 image=image)
             visualizer = ImageVisualizer(
-                config_file="COCO-InstanceSegmentation/mask_rcnn_R_101_FPN_3x.yaml")
+                config_file=self.config.segmentation_default_config)
 
         return visualizer.generate_image(
             image, outputs, class_names, self.known_classes)
@@ -40,4 +43,4 @@ class InferenceEngine:
                 config_file=config_file, threshold=0.8)
         elif task == "segmentation":
             self.segmentationNet = DetectronNetwork(
-                config_file="COCO-InstanceSegmentation/mask_rcnn_R_101_FPN_3x.yaml", threshold=0.8)
+                config_file=config_file, threshold=0.8)

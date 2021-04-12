@@ -25,7 +25,7 @@ class LocalStorageManager(StorageManager):
         self.location = f"{os.getcwd()}/storage/{type}"
 
     def store(self, files: List[UploadFile], extensions: List[str]) -> List[str]:
-        result = []
+        locations = []
         for file, extension in zip(files, extensions):
             file.file.seek(0)
             content = file.file.read()
@@ -33,8 +33,8 @@ class LocalStorageManager(StorageManager):
             with open(file_location, "wb+") as f:
                 f.write(content)
             file.file.close()
-            result.append(file_location)
-        return result
+            locations.append(file_location)
+        return locations
 
     def delete(self, url: str):
         os.remove(url)

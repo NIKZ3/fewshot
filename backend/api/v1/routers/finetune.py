@@ -39,8 +39,9 @@ async def finetune(
 
     images = []
     for file in files:
-        img_util.store_file_and_metadata(file, user.id)
         images.append(await img_util.decode(file))
 
+    background_tasks.add_task(
+        img_util.store_file_and_metadata, files, user.id, db)
     background_tasks.add_task(tuner.tune, images, label, network, user.id, db)
     return {"message": "New model will be available soon"}

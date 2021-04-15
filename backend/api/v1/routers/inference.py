@@ -56,5 +56,5 @@ async def run_inference(
     result = await img_util.encode(output_image, file.content_type)
 
     background_tasks.add_task(
-        img_util.store_file_and_metadata, file, user.id, db)
+        img_util.store_file_and_metadata, [file], user.id, db)
     return StreamingResponse(io.BytesIO(result.tobytes()), media_type=file.content_type)

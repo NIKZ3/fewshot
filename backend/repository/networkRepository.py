@@ -14,3 +14,6 @@ async def create_network(db: Session, title: str, known_classes: Optional[str] =
 
 async def get_network_by_id(db: Session, network_id: int):
     return db.query(models.Network).filter(models.Network.id == network_id).first()
+
+async def get_all_networks(db:Session):
+    return db.query(models.Network).all()

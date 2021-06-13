@@ -1,6 +1,7 @@
 import uuid
 import os
 from typing import BinaryIO, List
+from pathlib import Path
 
 from starlette.datastructures import UploadFile
 from lib.utils.interfaces.abstractStorageManager import StorageManager
@@ -23,6 +24,7 @@ class LocalStorageManager(StorageManager):
         """
         super().__init__()
         self.location = f"{os.getcwd()}/storage/{type}"
+        Path(self.location).mkdir(parents=True,exist_ok=True)
 
     def store(self, files: List[UploadFile], extensions: List[str]) -> List[str]:
         locations = []
